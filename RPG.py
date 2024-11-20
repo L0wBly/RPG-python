@@ -1,3 +1,9 @@
+def create_new_game():
+    pass
+
+def load_saved_game():
+    pass
+
 def about():
     print("Vous êtes le héros. Vous vous réveillez sur une île déserte suite a un crash d'avion avec pour seul objet un couteau. Vous devrez gagner battre des monstres en tout genre pour accumuler de l'expérience et récuperer de nouvelles armes pour devenir plus puissant et battre le boss pour vous échappez de l'ile.")
 
