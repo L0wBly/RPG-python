@@ -12,7 +12,7 @@ while choice != "4":
     print("\n=====MAIN MENU===== :")
     print("1 - Create New Game")
     print("2 - Load Saved Game")
-    print("3 - About")
+    print("3 - About")                          # Menu interactif
     print("4 - Exit")
     print("===================")
     choice = input("> ")
@@ -33,7 +33,7 @@ class objet :
         if type == "health":
             hero.health += self.power
         if type == "defense":
-            hero.defense += self.power
+            hero.defense += self.power                  # fonction pour utiliser un objet, vérifie le type de l'objet et effectue l'action en fonction du type
         if type == "strenght":
             hero.strenght += self.power
 class weapon :
@@ -43,7 +43,7 @@ class weapon :
         self.attack = attack
     
     def use (self,hero):
-        hero.attack_list.append(self.attack)
+        hero.attack_list.append(self.attack)            # fonction ajoutant une attaque à la liste du personnage
 
 class attack :
     def __init__(self,name,hit_chance,damage,crit_chance,description):
@@ -58,7 +58,7 @@ class attack :
         from random import randint
         percent = randint(1,100)
         crit = randint(1,100)
-        if percent > self.hit_chance or self.use_number == 0:
+        if percent > self.hit_chance or self.use_number == 0:                   # fonction calculant si une attaque atteint sa cible et si cette attaque est un coup critique puis renvoie les dégâts infligés
             return 0
         else:
             if crit > self.hit_chance:
@@ -83,20 +83,20 @@ class player :
         for attack in self.attack_list:
             print(attack.name)
         choice = input()
-        for attack in self.attack_list:
+        for attack in self.attack_list:                          # fonction permettant de choisir une attaque dans la liste du joueur
             if attack.name == choice:
                 return attack.calculate_damage()
             else:
                 return 0
 
     def open_inventory(self):
-        for object in self.inventory:
+        for object in self.inventory:                         # fonction permettant d'ouvrir l'inventaire
             print(objet.name)
 
     def use_object(self):
         self.open_inventory()
         choice = input()
-        for object in self.inventory:
+        for object in self.inventory:                          # fonction permettant d'utiliser un objet qui se situe dans l'inventaire puis le supprime de l'inventaire
             if object.name == choice:
                 object.use(self)
                 self.inventory.remove(object)
