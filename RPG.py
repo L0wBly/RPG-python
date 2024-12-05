@@ -23,16 +23,86 @@ while choice != "4":
         case "4" : print("Goodbye")
         case _: print("Choix Invalide")
 
-class player:
-    def __init__(self):
-        # name
-        # hp
-        # inventory
-        # attack
-        # strength
-        # defense
-        # experience
-        # level
+class objet :
+    def __init__(self,name,power,type):
+        self.name = name
+        self.power = power
+        self.type = type
+
+    def use(self,hero):
+        if type == "health":
+            hero.health += self.power
+        if type == "defense":
+            hero.defense += self.power
+        if type == "strenght":
+            hero.strenght += self.power
+class weapon :
+    def __init__(self,name,power,attack):
+        self.name = name
+        self.power = power
+        self.attack = attack
+    
+    def use (self,hero):
+        hero.attack_list.append(self.attack)
+
+class attack :
+    def __init__(self,name,hit_chance,damage,crit_chance,description):
+        self.name = name
+        self.hit_chance = hit_chance
+        self.damage = damage
+        self.crit_chance = crit_chance
+        self.use_number = 10
+        self.description = description
+
+    def calculate_damage(self):
+        from random import randint
+        percent = randint(1,100)
+        crit = randint(1,100)
+        if percent > self.hit_chance or self.use_number == 0:
+            return 0
+        else:
+            if crit > self.hit_chance:
+                return self.damage * 1.5
+            else:
+                return self.damage
+            
+    def attack_description(self):
+        pass
+class player :
+    def __init__(self,name,attack_list,experience):
+        self.name = name
+        self.hp = 100
+        self.inventory = [objet("potion de soin","health",10),objet("bandages","health",5),objet("taseur à utilisation unique", "strenght",50)]
+        self.attack_list = attack_list
+        self.strength = 15
+        self.defense = 15
+        self.experience = experience
+        self.level = 1
+
+    def choose_attack(self):
+        for attack in self.attack_list:
+            print(attack.name)
+        choice = input()
+        for attack in self.attack_list:
+            if attack.name == choice:
+                return attack.calculate_damage()
+            else:
+                return 0
+
+    def open_inventory(self):
+        for object in self.inventory:
+            print(objet.name)
+
+    def use_object(self):
+        self.open_inventory()
+        choice = input()
+        for object in self.inventory:
+            if object.name == choice:
+                object.use(self)
+                self.inventory.remove(object)
+                print(object.name," a été utilisé")
+
+    def level(self):
         pass
 
 class mob :
@@ -44,16 +114,6 @@ class mob :
         # defense
         # force
         # loot
-        pass
-
-class attack :
-    def __init__(self):
-        # name
-        # hit_chance
-        # damage
-        # critical
-        # use_nb
-        # description
         pass
 
 class place :
