@@ -23,7 +23,7 @@ while choice != "4":
         case "4" : print("Goodbye")
         case _: print("Choix Invalide")
 
-class objet :
+class object :
     def __init__(self,name,power,type):
         self.name = name
         self.power = power
@@ -71,8 +71,8 @@ class attack :
 class player :
     def __init__(self,name,attack_list,experience):
         self.name = name
-        self.hp = 100
-        self.inventory = [objet("potion de soin","health",10),objet("bandages","health",5),objet("taseur à utilisation unique", "strenght",50)]
+        self.health = 100
+        self.inventory = [object("potion de soin","health",10),object("bandages","health",5),object("taseur à utilisation unique", "strenght",50)]
         self.attack_list = attack_list
         self.strength = 15
         self.defense = 15
@@ -90,8 +90,8 @@ class player :
                 return 0
 
     def open_inventory(self):
-        for object in self.inventory:                         # fonction permettant d'ouvrir l'inventaire
-            print(objet.name)
+        for object in self.inventory:                         # fonction permettant d'afficher l'inventaire
+            print(object.name)
 
     def use_object(self):
         self.open_inventory()
@@ -105,16 +105,23 @@ class player :
     def level(self):
         pass
 
+    def death(self):
+        if self.hp == 0:                                      # fonction qui mets un terme à la partie si on meurt
+            print("Vous êtes mort !")
+            print("Merci d'avoir jouer")
+
 class mob :
-    def __init__(self):
-        # name 
-        # hp
-        # level
-        # attack
-        # defense
-        # force
-        # loot
-        pass
+    def __init__(self,name,health,level,attack,defense,strenght,loot):
+        self.name = name
+        self.health = health
+        self.level = level
+        self.attack = attack
+        self.defense = defense
+        self.strenght = strenght
+        self.loot = loot
+
+mob1 = mob("renard",20,1,["morsure",60,20,4],2,2)
+mob2 = mob("macaque",45,3,["morsure",55,50,12],5,5)
 
 class place :
     def __init__(self):
