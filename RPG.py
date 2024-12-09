@@ -1,3 +1,4 @@
+from random import randint
 def create_new_game():
     pass
 
@@ -55,7 +56,6 @@ class attack :
         self.description = description
 
     def calculate_damage(self):
-        from random import randint
         percent = randint(1,100)
         crit = randint(1,100)
         if percent > self.hit_chance or self.use_number == 0:                   # fonction calculant si une attaque atteint sa cible et si cette attaque est un coup critique puis renvoie les dégâts infligés
@@ -109,6 +109,31 @@ class player :
         if self.hp == 0:                                      # fonction qui mets un terme à la partie si on meurt
             print("Vous êtes mort !")
             print("Merci d'avoir jouer")
+
+    def roll(self):
+        print("Vous effectuez une roulade et esquivez l'attaque de " + mob.name)
+
+    def combat(self):
+        print(mob.name + " vous attaque !")
+        while player.health > 0 and mob.health > 0:
+            self.combat_interface()
+            choice = input("> ")
+            match choice:
+                case "1": self.choose_attack()                 # fonction qui gére le combat
+                case "2": self.roll()
+                case "3": self.use_object()
+        if player.health <= 0:
+            self.death()
+        else:
+            print("Vous avez vaincu " + mob.name)
+            self.player.experience += randint(1,70)
+
+    def combat_interface(self):
+        print(player.name + " Vie - " + player.health + " VS " + mob.name + " Vie - " + mob.health)
+        print("Que voulez vous faire ?")
+        print("1 - Attaques")                                # fonction qui affiche le menu interactif pendant le combat
+        print("2 - Roulade")
+        print("3 - Inventaire")
 
 class mob :
     def __init__(self,name,health,level,attack,defense,strenght,loot):
