@@ -1,4 +1,5 @@
 from random import randint
+import sys
 def create_new_game():
     pass
 
@@ -6,22 +7,24 @@ def load_saved_game():
     pass
 
 def about():
-    print("Vous êtes le héros. Vous vous réveillez sur une île déserte suite a un crash d'avion avec pour seul objet un couteau. Vous devrez gagner battre des monstres en tout genre pour accumuler de l'expérience et récuperer de nouvelles armes pour devenir plus puissant et battre le boss pour vous échappez de l'ile.")
+    print("Vous êtes le héros. Vous vous réveillez sur une île déserte suite a un crash d'avion avec pour seul objet un couteau. Vous devrez battre des monstres en tout genre pour accumuler de l'expérience et récuperer de nouvelles armes pour devenir plus puissant et battre le boss pour vous échappez de l'ile.")
 
 choice = ""
 while choice != "4":
-    print("\n=====MAIN MENU===== :")
-    print("1 - Create New Game")
-    print("2 - Load Saved Game")
-    print("3 - About")                          # Menu interactif
-    print("4 - Exit")
-    print("===================")
-    choice = input("> ")
+    print("\n=====MENU PRINCIPAL===== :")
+    print("1 - Nouvelle Partie")
+    print("2 - Charger Partie")
+    print("3 - A Propos")                          # Menu interactif
+    print("4 - Quitter")
+    print("==========================")
+    choice = input("=> ")
     match choice:
         case "1" : create_new_game()        
         case "2" : load_saved_game()        
         case "3" : about()        
-        case "4" : print("Goodbye")
+        case "4" : 
+            print("Au revoir")
+            sys.exit()
         case _: print("Choix Invalide")
 
 class object :
@@ -30,21 +33,21 @@ class object :
         self.power = power
         self.type = type
 
-    def use(self,hero):
+    def use(self,player):
         if type == "health":
-            hero.health += self.power
+            player.health += self.power
         if type == "defense":
-            hero.defense += self.power                  # fonction pour utiliser un objet, vérifie le type de l'objet et effectue l'action en fonction du type
+            player.defense += self.power                  # fonction pour utiliser un objet, vérifie le type de l'objet et effectue l'action en fonction du type
         if type == "strenght":
-            hero.strenght += self.power
+            player.strenght += self.power
 class weapon :
     def __init__(self,name,power,attack):
         self.name = name
         self.power = power
         self.attack = attack
     
-    def use (self,hero):
-        hero.attack_list.append(self.attack)            # fonction ajoutant une attaque à la liste du personnage
+    def use (self,player):
+        player.attack_list.append(self.attack)            # fonction ajoutant une attaque à la liste du personnage
 
 class attack :
     def __init__(self,name,hit_chance,damage,crit_chance,description):
@@ -76,7 +79,7 @@ class player :
         self.attack_list = attack_list
         self.strength = 15
         self.defense = 15
-        self.experience = experience
+        self.experience = 0
         self.level = 1
 
     def choose_attack(self):
@@ -102,38 +105,49 @@ class player :
                 self.inventory.remove(object)
                 print(object.name," a été utilisé")
 
-    def level(self):
-        pass
-
     def death(self):
-        if self.hp == 0:                                      # fonction qui mets un terme à la partie si on meurt
-            print("Vous êtes mort !")
-            print("Merci d'avoir jouer")
+        print("Vous êtes mort !")                               # fonction qui mets un terme à la partie si on meurt
+        print("Merci d'avoir jouer")
 
     def roll(self):
-        print("Vous effectuez une roulade et esquivez l'attaque de " + mob.name)
+        print("Vous effectuez une roulade et esquivez l'attaque de " + mob.name)         # fonction pour esquiver une attaque
+
+    def run_away(self):
+        print("Vous essayez de fuir")
+        percent = randint(1,100)
+        if percent > 50:                                         # fonction pour tenter de prendre la fuite
+            print("Vous vous êtes enfui")
+        else:
+            print("Vous n'avez pas réussi a vous enfuir")
 
     def combat(self):
         print(mob.name + " vous attaque !")
         while player.health > 0 and mob.health > 0:
             self.combat_interface()
-            choice = input("> ")
+            choice = input("=> ")
             match choice:
                 case "1": self.choose_attack()                 # fonction qui gére le combat
                 case "2": self.roll()
                 case "3": self.use_object()
+                case "4": self.run_away()
         if player.health <= 0:
             self.death()
         else:
             print("Vous avez vaincu " + mob.name)
             self.player.experience += randint(1,70)
+            if self.player.experience >= 50:
+                self.player.experience = self.player.experience - 50
+                self.player.level += 1
+                self.player.health += 10
+
 
     def combat_interface(self):
-        print(player.name + " Vie - " + player.health + " VS " + mob.name + " Vie - " + mob.health)
+        print(player.name + " Vie - " + player.health + " Experience - " + player.experience + " VS " + mob.name + " Vie - " + mob.health)
         print("Que voulez vous faire ?")
         print("1 - Attaques")                                # fonction qui affiche le menu interactif pendant le combat
         print("2 - Roulade")
         print("3 - Inventaire")
+        print("4 - Fuir")
 
 class mob :
     def __init__(self,name,health,level,attack,defense,strenght,loot):
@@ -145,8 +159,10 @@ class mob :
         self.strenght = strenght
         self.loot = loot
 
-mob1 = mob("renard",20,1,["morsure",60,20,4],2,2)
-mob2 = mob("macaque",45,3,["morsure",55,50,12],5,5)
+mob1 = mob("koala",20,1,["coup de patte",60,20,4],2,2)
+mob2 = mob("paresseux",30,2,["griffes",80,20,6],2,2)
+mob3 = mob("macaque",45,3,["morsure",55,50,12],5,5)
+mob4 = mob("BOSS ! - serpent géant",160,5,["crachat de venin",60,70,15],8,8)
 
 class place :
     def __init__(self):
@@ -158,19 +174,6 @@ class place :
         # mob
         # fight
         pass
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 map = [
     [1,2,3],
