@@ -86,7 +86,7 @@ class player :
         for attack in self.attack_list:
             print(attack.name)
         choice = input()
-        for attack in self.attack_list:                          # fonction permettant de choisir une attaque dans la liste du joueur
+        for attack in self.attack_list:                          # fonction permettant de choisir une attaque dans la liste d'attaques du joueur
             if attack.name == choice:
                 return attack.calculate_damage()
             else:
@@ -115,7 +115,7 @@ class player :
     def run_away(self):
         print("Vous essayez de fuir")
         percent = randint(1,100)
-        if percent > 50:                                         # fonction pour tenter de prendre la fuite
+        if percent > 75:                                         # fonction pour tenter de prendre la fuite
             print("Vous vous êtes enfui")
         else:
             print("Vous n'avez pas réussi a vous enfuir")
@@ -144,8 +144,8 @@ class player :
     def combat_interface(self):
         print(player.name + " Vie - " + player.health + " Experience - " + player.experience + " VS " + mob.name + " Vie - " + mob.health)
         print("Que voulez vous faire ?")
-        print("1 - Attaques")                                # fonction qui affiche le menu interactif pendant le combat
-        print("2 - Roulade")
+        print("1 - Attaques")
+        print("2 - Roulade")                                # fonction qui affiche le menu interactif pendant le combat
         print("3 - Inventaire")
         print("4 - Fuir")
 
