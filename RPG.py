@@ -1,28 +1,6 @@
 from random import randint
 import sys
 
-class object :
-    def __init__(self,name,power,type):
-        self.name = name
-        self.power = power
-        self.type = type
-
-    def use(self,player):
-        if type == "health":
-            player.health += self.power
-        if type == "defense":
-            player.defense += self.power                  # fonction pour utiliser un objet, vérifie le type de l'objet et effectue l'action en fonction du type
-        if type == "strenght":
-            player.strenght += self.power
-class weapon :
-    def __init__(self,name,power,attack):
-        self.name = name
-        self.power = power
-        self.attack = attack
-    
-    def use (self,player):
-        player.attack_list.append(self.attack)            # fonction ajoutant une attaque à la liste du personnage
-
 """ 
 Dévut en c3
 a1  a2 a3 a4 a5
@@ -119,7 +97,7 @@ zonemap = {
         RIGHT: 'b3',
     },
     'b3': {
-        ZONENAME: "dhgrtdsg",
+        ZONENAME: 'dhgrtdsg',
         DESCRIPTION: 'd',
         SOLVED: False,
         UP: 'a3',
@@ -164,7 +142,7 @@ zonemap = {
         RIGHT: 'c3',
     },
     'c3': {
-        ZONENAME: "Home",
+        ZONENAME: 'Home',
         DESCRIPTION: 'You are at your home',
         SOLVED: False,
         UP: 'b3',
@@ -245,11 +223,11 @@ zonemap = {
         RIGHT: 'e2',
     },
     'e2': {
-        ZONENAME: "",
+        ZONENAME: '',
         DESCRIPTION: 'description',
         SOLVED: False,
         UP: 'd2',
-        DOWN: "",
+        DOWN: '',
         LEFT: 'e1',
         RIGHT: 'e3',
     },
@@ -308,6 +286,29 @@ def about():
     print('\n'+ '\n')
     start_game()
 
+
+class object :
+    def __init__(self,name,power,type):
+        self.name = name
+        self.power = power
+        self.type = type
+
+    def use(self,player):
+        if type == "health":
+            player.health += self.power
+        if type == "defense":
+            player.defense += self.power                  # fonction pour utiliser un objet, vérifie le type de l'objet et effectue l'action en fonction du type
+        if type == "strenght":
+            player.strenght += self.power
+class weapon :
+    def __init__(self,name,power,attack):
+        self.name = name
+        self.power = power
+        self.attack = attack
+    
+    def use (self,player):
+        player.attack_list.append(self.attack)            # fonction ajoutant une attaque à la liste du personnage
+
 class attack :
     def __init__(self,name,hit_chance,damage,crit_chance,description):
         self.name = name
@@ -332,7 +333,7 @@ class attack :
         pass
       
 class player :
-    def __init__(self,name,attack_list,experience):
+    def __init__(self,name,attack_list):
         self.name = name
         self.health = 100
         self.inventory = [object("potion de soin","health",10),object("bandages","health",5),object("taseur à utilisation unique", "strenght",50)]
@@ -341,6 +342,8 @@ class player :
         self.defense = 15
         self.experience = 0
         self.level = 1
+        self.position = 'c3'
+
 
     def choose_attack(self):
         for attack in self.attack_list:
@@ -355,6 +358,7 @@ class player :
     def open_inventory(self):
         for object in self.inventory:                         # fonction permettant d'afficher l'inventaire
             print(object.name)
+            prompt()
 
     def use_object(self):
         self.open_inventory()
@@ -364,6 +368,7 @@ class player :
                 object.use(self)
                 self.inventory.remove(object)
                 print(object.name," a été utilisé")
+        prompt()
 
     def death(self):
         print("Vous êtes mort !")                               # fonction qui mets un terme à la partie si on meurt
@@ -409,6 +414,7 @@ class player :
         print("3 - Inventaire")
         print("4 - Fuir")
 
+
 class mob :
     def __init__(self,name,health,level,attack,defense,strenght,loot):
         self.name = name
@@ -419,10 +425,10 @@ class mob :
         self.strenght = strenght
         self.loot = loot
 
-mob1 = mob("koala",20,1,["coup de patte",60,20,4],2,2)
-mob2 = mob("paresseux",30,2,["griffes",80,20,6],2,2)
-mob3 = mob("macaque",45,3,["morsure",55,50,12],5,5)
-mob4 = mob("BOSS ! - serpent géant",160,5,["crachat de venin",60,70,15],8,8)
+mob1 = mob("koala",20,1,["coup de patte",60,20,4],2,2,"")
+mob2 = mob("paresseux",30,2,["griffes",80,20,6],2,2,"")
+mob3 = mob("macaque",45,3,["morsure",55,50,12],5,5,"")
+mob4 = mob("BOSS ! - serpent géant",160,5,["crachat de venin",60,70,15],8,8,"")
 
 ################ MAP ##############
 
@@ -438,7 +444,7 @@ def prompt():
 	print("\nQue veux tu faire ?\n")
 	print("Vous avez le choix entre :\nAvancer, \nOuvrir l'inventaire\n")
 	action = input(">>>   ")
-	acceptable_actions = ['avancer',"ouvir l'inventaire","quitter"]
+	acceptable_actions = ['avancer',"ouvrir l'inv","quitter",'partir', 'inventaire', "ouvrir l'inventaire"]
 	while action.lower() not in acceptable_actions:
 		print("Erreur réponse incorrecte\n")
 		prompt()
@@ -447,22 +453,22 @@ def prompt():
 	elif action.lower() in ['avancer', 'partir']:
 		move(action.lower())
 	elif action.lower() in ["ouvrir l'inv", 'inventaire', "ouvrir l'inventaire"]:
-		'''fonction inventaire'''
+		player1.open_inventory()
 
 def move(myAction):
 	askString = "Où est ce que tu aimerais "+myAction+"?\n> "
-	print("Direction possible : up, left, right, down\n")
+	print("Direction possible : " + zonemap[player1.position][UP],zonemap[player1.position][DOWN],zonemap[player1.position][LEFT],zonemap[player1.position][RIGHT] )
 	destination = input(askString)
-	if destination == 'up':
+	if destination == zonemap[player1.position][UP]:
 		move_dest = zonemap[player1.position][UP]
 		move_player(move_dest)
-	elif destination == 'left':
+	elif destination == zonemap[player1.position][LEFT]:
 		move_dest = zonemap[player1.position][LEFT]
 		move_player(move_dest)
-	elif destination == 'right':
+	elif destination == zonemap[player1.position][RIGHT]:
 		move_dest = zonemap[player1.position][RIGHT]
 		move_player(move_dest)
-	elif destination == 'down':
+	elif destination == zonemap[player1.position][DOWN]:
 		move_dest = zonemap[player1.position][DOWN]
 		move_player(move_dest)
 	else:
@@ -470,13 +476,14 @@ def move(myAction):
 		move(myAction)
 
 def move_player(move_dest):
-	print("\nTu as avancé en :" + move_dest + ".")
 	player1.position = move_dest
 	print_location()
 	
 def setup():
-	print("\nBienvenu !!\n\nPour un peu de contexte de vais t'expliquer le but de notre jeu")
+	print("\nBienvenu " + player_name + " !!\n\nPour un peu de contexte de vais t'expliquer le but de notre jeu")
 	print("\nVous êtes le héros. Vous vous réveillez sur une île déserte suite à un crash d'avion avec pour seul objet un couteau. Vous devrez battre des monstres en tout genre pour accumuler de l'expérience et récuperer de nouvelles armes pour devenir plus puissant et battre le boss pour vous échappez de l'ile. \n")
 	prompt()
-	
+
+player_name = input("Quel est votre nom ? ")
+player1 = player(player_name,"kick")
 start_game()
