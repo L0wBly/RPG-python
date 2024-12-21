@@ -106,6 +106,11 @@ class player :
     def open_inventory(self):
         for object in self.inventory:                         # fonction permettant d'afficher l'inventaire
             print(object.name)
+        print("Quel object voulez vous utiliser ?")
+        choice = input()
+        if choice == object.name:
+            player1.use_object()
+        else:
             prompt()
 
     def use_object(self):
@@ -115,6 +120,7 @@ class player :
             if object.name == choice:
                 object.use(self)
                 self.inventory.remove(object)
+                print(player1.health)
                 print(object.name," a été utilisé")
         prompt()
 
@@ -130,21 +136,25 @@ class player :
         percent = randint(1,100)
         if percent > 75:                                         # fonction pour tenter de prendre la fuite
             print("Vous vous êtes enfui")
+            prompt()
         else:
             print("Vous n'avez pas réussi a vous enfuir")
+            print(aléatoire.attack)
+            print(int(player1.health) - int(aléatoire.strenght))
 
     def combat(self):
         print(aléatoire.name + " vous attaque !")
-        while player1.health > 0 and aléatoire.health > 0:
+        while player1.health > 0 and current_mob_health > 0:
             self.combat_interface()
             choice = input("=> ")
+            if choice != "2" and choice !="4":
+                print(aléatoire.attack)
+                print(int(player1.health) - int(aléatoire.strenght))
             match choice:
                 case "1": self.choose_attack()                 # fonction qui gére le combat
                 case "2": self.roll()
                 case "3": self.use_object()
                 case "4": self.run_away()
-            print(aléatoire.attack)
-            print(int(player1.health) - int(aléatoire.strenght))
         if player1.health <= 0:
             self.death()
         else:
@@ -157,12 +167,15 @@ class player :
 
 
     def combat_interface(self):
-        print(player1.name + " Vie - " + str(player1.health) + " Experience - " + str(player1.experience) + " VS " + aléatoire.name + " Vie - " + str(aléatoire.health))
+        print(player1.name + " Vie - " + str(player1.health) + " Experience - " + str(player1.experience) + " VS " + aléatoire.name + " Vie - " + str(current_mob_health))
         print("Que voulez vous faire ?")
         print("1 - Attaques")
         print("2 - Roulade")                                # fonction qui affiche le menu interactif pendant le combat
         print("3 - Inventaire")
         print("4 - Fuir")
+
+# current_player_health = player1.health
+current_mob_health = aléatoire.health
 
 
 ################### MAP #####################
