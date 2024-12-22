@@ -109,7 +109,7 @@ class player :
     
     def mob_attack(self):
         global current_player_health
-        current_player_health = current_player_health - aléatoire.strenght
+        current_player_health = (current_player_health - aléatoire.strenght)
         print(aléatoire.name + " utilise " + str(aléatoire.attack))
         print(player1.name + " Vie : " + str(current_player_health))
         return current_player_health
@@ -134,7 +134,6 @@ class player :
             prompt()
 
     def use_object(self):                          # fonction permettant d'utiliser un objet qui se situe dans l'inventaire puis le supprime de l'inventaire
-        print("aa")
         object.use()
         player1.inventory.remove(object)
         print(object.name + " a été utilisé")
@@ -167,6 +166,20 @@ class player :
         global aléatoire
         aléatoire = random.choice(my_list)
 
+    def experience_gained(self):
+        global current_xp
+        xp_from_mob = randint(1,60)
+        current_xp += xp_from_mob
+        if current_xp >= 50:
+            print("Experience : +" + str(current_xp))				# fonction qui gére l'éxpérience gagner
+            current_xp -= 50
+            player1.level += 1
+            player1.health += 10
+            return current_xp
+        else:
+            print("Experience : +" + str(current_xp))
+            return current_xp
+
     def combat(self):
         print(aléatoire.name + " vous attaque !")
         while player1.health > 0 and current_mob_health > 0:
@@ -174,25 +187,21 @@ class player :
             choice = input("=> ")
             if choice != "2" and choice !="4": self.mob_attack()
             match choice:
-                case "1": self.choose_attack()                 # fonction qui gére le combat
-                case "2": self.roll()
-                case "3": self.use_object()
-                case "4": self.run_away()
+                case "1" | "Attaques" | "attaques": self.choose_attack()                 # fonction qui gére le combat
+                case "2" | "Roulade" | "roulade": self.roll()
+                case "3" | "Inventaire" | "inventaire": self.use_object()
+                case "4" | "Fuir" | "fuir": self.run_away()
         if player1.health <= 0:
             self.death()
         else:
             print("Vous avez vaincu " + aléatoire.name)
             player1.reset()
             player1.reset_mob()
+            player1.experience_gained()
             prompt()
-            # self.player.experience += randint(1,70)
-            # if self.player.experience >= 50:
-            #     self.player.experience = self.player.experience - 50
-            #     self.player.level += 1
-            #     self.player.health += 10
 
     def combat_interface(self):
-        print(player1.name + " Vie : " + str(current_player_health) + " Experience : " + str(player1.experience) + " VS " + aléatoire.name + " Vie : " + str(current_mob_health))
+        print(player1.name + " Vie : " + str(current_player_health) + " Level : " + str(player1.level) + " Experience : " + str(current_xp) + " / 50 " + " VS " + aléatoire.name + " Vie : " + str(current_mob_health))
         print("Que voulez vous faire ?")
         print("1 - Attaques")
         print("2 - Roulade")                                # fonction qui affiche le menu interactif pendant le combat
@@ -447,6 +456,7 @@ def print_location():
     print('# ' + (zonemap[player1.position][ZONENAME]) + ' #')
     print('#' * (10 + len(player1.position)))
     print('\n' + (zonemap[player1.position][DESCRIPTION]))
+    prompt()
     
 def prompt():
     print("\nQue veux-tu faire ?\n")
@@ -499,5 +509,6 @@ def setup():
 player_name = input("Quel est votre nom ? ")
 player1 = player(player_name)
 current_player_health = player1.health
+current_xp = player1.experience
 
 start_game()
