@@ -34,7 +34,6 @@ mob3 = mob("Macaque",45,3,["morsure",55,50,12],5,5,"")
 mob4 = mob("BOSS ! - Serpent géant",160,5,["crachat de venin",60,70,15],8,8,"")
 
 my_list = [mob1, mob2, mob3]
-
 aléatoire = random.choice(my_list)
 instance = aléatoire.name
 
@@ -88,7 +87,7 @@ class player :
         self.name = name
         self.health = 100
         self.inventory = [object("potion de soin","health",10),object("bandage","health",5),object("taseur à utilisation unique", "strenght",50)]
-        self.attack_list = [attack("coup de couteau",80,7,10,15),attack("saignement",70,12,45,10)]
+        self.attack_list = [attack("coup de couteau",80,15,10,15),attack("saignement",70,25,45,10)]
         self.strength = 15
         self.defense = 15
         self.experience = 0
@@ -159,6 +158,15 @@ class player :
             print("Vous n'avez pas réussi a vous enfuir")
             self.mob_attack()
 
+    def reset(self):
+        global current_mob_health
+        current_mob_health = aléatoire.health
+    
+    def reset_mob(self):
+        global my_list
+        global aléatoire
+        aléatoire = random.choice(my_list)
+
     def combat(self):
         print(aléatoire.name + " vous attaque !")
         while player1.health > 0 and current_mob_health > 0:
@@ -174,14 +182,14 @@ class player :
             self.death()
         else:
             print("Vous avez vaincu " + aléatoire.name)
-            print("Merci d'avoir joué")
-            sys.exit()
+            player1.reset()
+            player1.reset_mob()
+            prompt()
             # self.player.experience += randint(1,70)
             # if self.player.experience >= 50:
             #     self.player.experience = self.player.experience - 50
             #     self.player.level += 1
             #     self.player.health += 10
-
 
     def combat_interface(self):
         print(player1.name + " Vie : " + str(current_player_health) + " Experience : " + str(player1.experience) + " VS " + aléatoire.name + " Vie : " + str(current_mob_health))
