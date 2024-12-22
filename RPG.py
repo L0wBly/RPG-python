@@ -86,7 +86,7 @@ class player :
     def __init__(self,name):
         self.name = name
         self.health = 100
-        self.inventory = [object("potion de soin","health",10),object("bandage","health",5),object("taseur à utilisation unique", "strenght",50)]
+        self.inventory = [object("potion de soin","health",10),object("bandage","health",5),object("taseur à utilisation unique","strenght",50)]
         self.attack_list = [attack("coup de couteau",80,15,10,15),attack("saignement",70,25,45,10)]
         self.strength = 15
         self.defense = 15
@@ -104,8 +104,13 @@ class player :
                 print("Dégats : " + str(damage))
                 global current_mob_health
                 current_mob_health = (current_mob_health - damage)
-                print(str(aléatoire.name) + " Vie : " + str(current_mob_health))
-                return current_mob_health
+                if current_mob_health <= 0:
+                    current_mob_health = 0
+                    print(str(aléatoire.name) + " Vie : " + str(current_mob_health))
+                    return current_mob_health
+                else:
+                    print(str(aléatoire.name) + " Vie : " + str(current_mob_health))
+                    return current_mob_health
     
     def mob_attack(self):
         global current_player_health
