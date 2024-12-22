@@ -51,6 +51,7 @@ class object :
             player.defense += self.power                  # fonction pour utiliser un objet, vérifie le type de l'objet et effectue l'action en fonction du type
         if type == "strenght":
             player.strenght += self.power
+
 class weapon :
     def __init__(self,name,power,attack):
         self.name = name
@@ -86,8 +87,8 @@ class player :
     def __init__(self,name):
         self.name = name
         self.health = 100
-        self.inventory = [object("potion de soin","health",10),object("bandages","health",5),object("taseur à utilisation unique", "strenght",50)]
-        self.attack_list = [attack("coup de couteau",80,15,10,15),attack("saignement",70,25,45,10)]
+        self.inventory = [object("potion de soin","health",10),object("bandage","health",5),object("taseur à utilisation unique", "strenght",50)]
+        self.attack_list = [attack("coup de couteau",80,7,10,15),attack("saignement",70,12,45,10)]
         self.strength = 15
         self.defense = 15
         self.experience = 0
@@ -100,28 +101,45 @@ class player :
         choice = input()
         for attack in self.attack_list:                          # fonction permettant de choisir une attaque dans la liste d'attaques du joueur
             if attack.name == choice:
-                print(int(attack.calculate_damage()))
-                print((int(aléatoire.health) - int(attack.calculate_damage())))
+                damage = attack.calculate_damage()
+                print("Dégats : " + str(damage))
+                global current_mob_health
+                current_mob_health = (current_mob_health - damage)
+                print(str(aléatoire.name) + " Vie : " + str(current_mob_health))
+                return current_mob_health
     
+    def mob_attack(self):
+        global current_player_health
+        current_player_health = current_player_health - aléatoire.strenght
+        print(aléatoire.name + " utilise " + str(aléatoire.attack))
+        print(player1.name + " Vie : " + str(current_player_health))
+        return current_player_health
+
     def open_inventory(self):
-        for object in self.inventory:                         # fonction permettant d'afficher l'inventaire
+        for object in self.inventory:                         # fonction permettant d'afficher l'inventaire et d'utiliser un objet
             print(object.name)
         print("Quel object voulez vous utiliser ?")
         choice = input()
-        if choice == object.name:
-            player1.use_object()
+        selected_object = None
+        for object in self.inventory:
+            if object.name.lower() == choice.lower():
+                selected_object = object
+            break
+        if choice == "potion de soin" or choice == "bandage" or choice == "taseur a utilisation unique":
+            object.use(self)
+            self.inventory.remove(selected_object)
+            print(choice + " a été utilisé(e)")
+            print(current_player_health)
+            prompt()
         else:
             prompt()
 
-    def use_object(self):
-        self.open_inventory()
-        choice = input()
-        for object in self.inventory:                          # fonction permettant d'utiliser un objet qui se situe dans l'inventaire puis le supprime de l'inventaire
-            if object.name == choice:
-                object.use(self)
-                self.inventory.remove(object)
-                print(player1.health)
-                print(object.name," a été utilisé")
+    def use_object(self):                          # fonction permettant d'utiliser un objet qui se situe dans l'inventaire puis le supprime de l'inventaire
+        print("aa")
+        object.use()
+        player1.inventory.remove(object)
+        print(object.name + " a été utilisé")
+        print(current_player_health)
         prompt()
 
     def death(self):
@@ -139,17 +157,14 @@ class player :
             prompt()
         else:
             print("Vous n'avez pas réussi a vous enfuir")
-            print(aléatoire.attack)
-            print(int(player1.health) - int(aléatoire.strenght))
+            self.mob_attack()
 
     def combat(self):
         print(aléatoire.name + " vous attaque !")
         while player1.health > 0 and current_mob_health > 0:
             self.combat_interface()
             choice = input("=> ")
-            if choice != "2" and choice !="4":
-                print(aléatoire.attack)
-                print(int(player1.health) - int(aléatoire.strenght))
+            if choice != "2" and choice !="4": self.mob_attack()
             match choice:
                 case "1": self.choose_attack()                 # fonction qui gére le combat
                 case "2": self.roll()
@@ -159,22 +174,23 @@ class player :
             self.death()
         else:
             print("Vous avez vaincu " + aléatoire.name)
-            self.player.experience += randint(1,70)
-            if self.player.experience >= 50:
-                self.player.experience = self.player.experience - 50
-                self.player.level += 1
-                self.player.health += 10
+            print("Merci d'avoir joué")
+            sys.exit()
+            # self.player.experience += randint(1,70)
+            # if self.player.experience >= 50:
+            #     self.player.experience = self.player.experience - 50
+            #     self.player.level += 1
+            #     self.player.health += 10
 
 
     def combat_interface(self):
-        print(player1.name + " Vie - " + str(player1.health) + " Experience - " + str(player1.experience) + " VS " + aléatoire.name + " Vie - " + str(current_mob_health))
+        print(player1.name + " Vie : " + str(current_player_health) + " Experience : " + str(player1.experience) + " VS " + aléatoire.name + " Vie : " + str(current_mob_health))
         print("Que voulez vous faire ?")
         print("1 - Attaques")
         print("2 - Roulade")                                # fonction qui affiche le menu interactif pendant le combat
         print("3 - Inventaire")
         print("4 - Fuir")
 
-# current_player_health = player1.health
 current_mob_health = aléatoire.health
 
 
@@ -474,5 +490,6 @@ def setup():
 
 player_name = input("Quel est votre nom ? ")
 player1 = player(player_name)
+current_player_health = player1.health
 
 start_game()
